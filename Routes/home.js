@@ -1,7 +1,9 @@
 const express = require('express');
 const app = express();
 const product = require('../Models/productSchema');
+const { verifyToken } = require('../jwt');
 const Router = express.Router();
+
 Router.get('/',async (req,res)=>{
     try {
         const response = await product.find();
@@ -14,10 +16,12 @@ Router.get('/',async (req,res)=>{
         res.status(500).json({error:"Server side error"})
     }
 })
-
-Router.post('/',async(req,res) => {
+Router.post('/',verifyToken,async(req,res) => {
     try {
         const data =  req.body;
+        console.log(data);
+        const username = req.user.username;
+        data.user = username;
         console.log(data);
         const newProduct = new product(data);
         const response = await newProduct.save();
