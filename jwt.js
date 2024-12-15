@@ -3,7 +3,9 @@ require('dotenv').config();
 
 const verifyToken = async (req, res, next) => {
     const authorization = req.headers.authorization;
+    console.log(authorization);
     const token = authorization.split(' ')[1];
+    console.log(token);
     if (!token) res.status(400).json({ error: "Unauthorized" });
     try {
         const response = await jwt.verify(token,process.env.tokenKey);
